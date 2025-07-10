@@ -1,0 +1,55 @@
+const Orders = require('../domain/models/orders');
+const productsModel = require('../domain/models/products');
+const response = require('../shared/sharedResponse');
+
+class OrderService {
+    async addOrder(req, res) {
+        const userId = req.user?.id;
+        try {
+            const product = await productsModel.findOne({ _id: req.body.productId }).select('traderId');
+            if (!product) {
+                return response.notFound(res, 'Product not found');
+            }
+            const traderId = product.traderId;
+            const orderData = { ...req.body, userId, traderId };
+            const newOrder = new Orders(orderData);
+            await newOrder.save();
+
+            return response.success(res, newOrder, 'Order created', 201);
+        } catch (error) {
+            return response.serverError(res, error.message);
+        }  
+    }
+
+
+    async updateOrder(req, res) {
+        const userId = req.user?.id;
+        const orderId = req.params.id;
+        try {
+            const order = await Orders.findById(orderId);
+            if (!order) return response.notFound(res, 'Order not found');
+            if (order.userId.toString() !== userId) return response.unauthorized(res, 'Not authorized');
+            Object.assign(order, req.body);
+            await order.save();
+            return response.success(res, order, 'Order updated');
+        } catch (error) {
+            return response.serverError(res, error.message);
+        }
+    }
+
+    async deleteOrder(req, res) {
+        const userId = req.user?.id;
+        const orderId = req.params.id;
+        try {
+            const order = await Orders.findById(orderId);
+            if (!order) return response.notFound(res, 'Order not found');
+            if (order.userId.toString() !== userId) return response.unauthorized(res, 'Not authorized');
+            await order.deleteOne();
+            return response.success(res, null, 'Order deleted');
+        } catch (error) {
+            return response.serverError(res, error.message);
+        }
+    }
+}
+
+module.exports = new OrderService();

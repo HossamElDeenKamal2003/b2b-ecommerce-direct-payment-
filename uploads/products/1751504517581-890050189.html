@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="ar"> 
+ <head> 
+  <meta charset="UTF-8"> 
+  <title>Ravo - متجر إلكتروني فاخر</title> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <meta name="description" content="Ravo Store - Books, Makeup, Skincare, Perfume"> 
+  <meta name="keywords" content="Ravo, كتب, ميكاب, عطور, مستحضرات تجميل"> 
+  <meta name="author" content="Ravo Team"> 
+  <meta name="robots" content="index, follow"> 
+  <meta name="theme-color" content="#000000"> 
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #000;
+      color: gold;
+      margin: 0;
+      text-align: center;
+    }
+    header {
+      background: linear-gradient(45deg, #ffd700, #b8860b);
+      color: black;
+      padding: 20px;
+      font-size: 24px;
+      font-weight: bold;
+      font-family: 'Lucida Handwriting', cursive;
+      text-shadow: 3px 3px 10px rgba(255, 215, 0, 0.7);
+    }
+    nav {
+      background-color: #b8860b;
+      padding: 15px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+    }
+    .styled-button {
+      background-color: #ffd700;
+      color: black;
+      font-size: 18px;
+      font-weight: bold;
+      font-family: 'Lucida Handwriting', cursive;
+      padding: 12px 18px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+      text-shadow: 3px 3px 8px rgba(255, 215, 0, 0.7);
+      text-decoration: none;
+      display: inline-block;
+    }
+    .styled-button:hover {
+      background-color: black;
+      color: gold;
+      transform: scale(1.1);
+    }
+    .product-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+    .product-item {
+      background-color: black;
+      padding: 15px;
+      border: 2px solid gold;
+      border-radius: 10px;
+      box-shadow: 3px 3px 10px rgba(255, 215, 0, 0.5);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .product-item:hover {
+      transform: scale(1.05);
+      box-shadow: 5px 5px 15px rgba(255, 215, 0, 0.8);
+    }
+    .section-container {
+      padding: 20px;
+    }
+    @media (max-width: 600px) {
+      .styled-button { font-size: 16px; padding: 10px 14px; }
+    }
+  </style> 
+ </head> 
+ <body> 
+  <div id="homePage"> 
+   <header> 
+    <div style="font-family: 'Lucida Handwriting', cursive; font-size: 28px;">
+      Welcome to <span style="color: #000; background: gold; padding: 2px 8px; border-radius: 8px;">Ravo</span> 
+    </div> 
+   </header> 
+   <main class="section-container"> 
+    <h2>Available Categories</h2> 
+    <div class="product-list"> 
+     <div class="product-item"> 
+      <h3>Books</h3> 
+      <p>Explore the best novels and educational books.</p> <button class="styled-button" onclick="showSection('book')">Let's Go 🚀</button> 
+     </div> 
+     <div class="product-item"> 
+      <h3>Makeup</h3> 
+      <p>Top beauty products for a stunning look.</p> <button class="styled-button" onclick="showSection('makeup')">Let's Go 💄</button> 
+     </div> 
+     <div class="product-item"> 
+      <h3>Skincare</h3> 
+      <p>Premium care for radiant skin.</p> <button class="styled-button" onclick="showSection('skincare')">Let's Go 🧴</button> 
+     </div> 
+     <div class="product-item"> 
+      <h3>Perfume</h3> 
+      <p>Luxury scents for every mood.</p> <button class="styled-button" onclick="showSection('perfume')">Let's Go 🌸</button> 
+     </div> 
+    </div> 
+   </main> 
+   <div class="section-container"> <a class="styled-button" href="https://wa.me/201159315258" target="_blank">📞 Ravo's Help</a> 
+   </div> 
+  </div> 
+  <div id="categoryPage" style="display:none;"> 
+   <header id="sectionHeader">
+     Ravo Section 
+   </header> <!-- شريط التنقل داخل صفحة القسم فقط --> 
+   <nav> <button class="styled-button" onclick="showSection('book')">📚 Books</button> <button class="styled-button" onclick="showSection('makeup')">💄 Makeup</button> <button class="styled-button" onclick="showSection('skincare')">🧴 Skincare</button> <button class="styled-button" onclick="showSection('perfume')">🌸 Perfume</button> <button class="styled-button" onclick="goHome()">🏠 Home</button> <a class="styled-button" href="https://wa.me/201159315258" target="_blank">📞 Ravo's Help</a> 
+   </nav> 
+   <main class="section-container"> 
+    <h2 id="sectionTagline">منتجات</h2> 
+    <div class="product-list" id="categoryList"></div> 
+   </main> 
+  </div> 
+  <div id="detailsPage" style="display:none;"> 
+   <header>
+     تفاصيل المنتج 
+   </header> 
+   <main class="section-container"> 
+    <img id="productImage" src="" alt="Product Image" style="width:200px; border-radius:10px; box-shadow:0 0 15px gold; margin-bottom:15px;"> 
+    <h3 id="productName">اسم المنتج</h3> 
+    <div id="extraInfo"></div> 
+    <p id="productDetails">وصف المنتج</p> 
+    <h4>طرق الدفع:</h4> 
+    <ul> 
+     <li>كاش عند الاستلام</li> 
+     <li>تحويل بنكي</li> 
+     <li>فودافون كاش</li> 
+    </ul> <a class="styled-button" href="https://wa.me/201159315258" target="_blank">اطلبه الآن 💬</a> 
+   </main> 
+   <div class="section-container"> <button class="styled-button" onclick="backToSection()">⬅ رجوع</button> 
+   </div> 
+  </div> 
+  <script>
+    let currentSection = "";
+
+    function showSection(type) {
+      currentSection = type;
+      document.getElementById("homePage").style.display = "none";
+      document.getElementById("categoryPage").style.display = "block";
+      document.getElementById("detailsPage").style.display = "none";
+
+      document.getElementById("sectionHeader").textContent = type.charAt(0).toUpperCase() + type.slice(1) + " Collection - Ravo";
+      document.getElementById("sectionTagline").textContent = "🛍️ " + type.toUpperCase() + " Products";
+
+      const list = document.getElementById("categoryList");
+      list.innerHTML = "";
+      for (let i = 1; i <= 100; i++) {
+        const item = document.createElement("div");
+        item.className = "product-item";
+        item.innerHTML = `
+          <h3>${type} ${i}</h3>
+          <p>منتج من قسم ${type}</p>
+          <button class="styled-button" onclick="showDetails('${type}', '${type} ${i}', 'مؤلف افتراضي')">التفاصيل</button>
+        `;
+        list.appendChild(item);
+      }
+    }
+
+    function goHome() {
+      document.getElementById("categoryPage").style.display = "none";
+      document.getElementById("detailsPage").style.display = "none";
+      document.getElementById("homePage").style.display = "block";
+    }
+
+    function showDetails(type, name, author = '') {
+      document.getElementById("categoryPage").style.display = "none";
+      document.getElementById("detailsPage").style.display = "block";
+      document.getElementById("productName").textContent = name;
+
+      if (type === "book") {
+        document.getElementById("extraInfo").innerHTML = `<h4>المؤلف: ${author}</h4>`;
+        document.getElementById("productDetails").textContent = "كتاب مميز لتنمية الفكر أو الترفيه حسب النوع.";
+      } else if (type === "makeup") {
+        document.getElementById("extraInfo").innerHTML = "";
+        document.getElementById("productDetails").textContent = "منتج تجميلي ممتاز يناسب جميع أنواع البشرة.";
+      } else if (type === "skincare") {
+        document.getElementById("extraInfo").innerHTML = "";
+        document.getElementById("productDetails").textContent = "منتج للعناية بالبشرة يمنحك إشراقة صحية.";
+      } else if (type === "perfume") {
+        document.getElementById("extraInfo").innerHTML = "";
+        document.getElementById("productDetails").textContent = "عطر فاخر يدوم طويلاً ويعبّر عن شخصيتك.";
+      }
+
+      document.getElementById("productImage").src = "https://via.placeholder.com/200x300?text=" + encodeURIComponent(name);
+    }
+
+    function backToSection() {
+      document.getElementById("detailsPage").style.display = "none";
+      document.getElementById("categoryPage").style.display = "block";
+    }
+  </script> 
+ </body>
+</html>
