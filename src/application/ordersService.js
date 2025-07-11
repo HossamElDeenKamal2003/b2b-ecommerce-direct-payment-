@@ -5,9 +5,15 @@ const response = require('../shared/sharedResponse');
 class OrderService {
     async addOrder(req, res) {
         const userId = req.user?.id;
+        const { productId } = req.body;
         try {
-            const product = await productsModel.findOne({ _id: req.body.productId }).select('traderId');
+            const product = await productsModel.findOne({ _id: productId }).select('traderId').lean();
+            if (!productId) {
+                return response.badRequest(res, 'Product ID is required');
+            }
+
             if (!product) {
+                console.log(productId);
                 return response.notFound(res, 'Product not found');
             }
             const traderId = product.traderId;

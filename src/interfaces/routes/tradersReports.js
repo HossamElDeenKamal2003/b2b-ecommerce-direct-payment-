@@ -5,7 +5,7 @@ const decodeToken = require('../../middlewares/decodeToken');
 
 router.get('/orders', decodeToken, reportsController.getAllTraderOrders);
 router.get('/orders/:id', decodeToken, reportsController.getTraderOrdersById);
-router.put('/orders/:orderId', decodeToken, reportsController.updateOrderStatus);
+router.put('/orders', decodeToken, reportsController.updateOrderStatus);
 router.get('/reports', decodeToken, reportsController.getWeeklySalesReport);
-
+router.post('/state', decodeToken, reportsController.filterOrdersWithStatus);
 module.exports = router;

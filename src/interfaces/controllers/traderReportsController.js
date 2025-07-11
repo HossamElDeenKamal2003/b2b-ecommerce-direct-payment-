@@ -8,5 +8,7 @@ module.exports = {
 
     updateOrderStatus: (req, res) => ReportsService.updateOrderStatus(req, res),
 
-    getWeeklySalesReport: (req, res) => ReportsService.getWeeklySalesReport(req, res)
+    getWeeklySalesReport: (req, res) => ReportsService.getWeeklySalesReport(req, res),
+
+    filterOrdersWithStatus: (req, res) => ReportsService.filterOrdersWithStatus(req, res)
 };

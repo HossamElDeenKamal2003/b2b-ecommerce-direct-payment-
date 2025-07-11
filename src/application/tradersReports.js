@@ -29,15 +29,14 @@ class Reports {
 
     async updateOrderStatus(req, res) {
         const traderId = req.user?.id;
-        const { orderId } = req.params;
-        const { status } = req.body;
+        const { orderId, status } = req.body;
         const validStatuses = ['Pending', 'Shipped', 'Delivered', 'Cancelled'];
         if (!validStatuses.includes(status)) {
             return response.badRequest(res, 'Invalid status');
         }
 
         try {
-            const updatedOrder = await Orders.findOneAndUpdate(
+            const updatedOrder = await orders.findOneAndUpdate(
                 { _id: orderId, traderId },
                 { status },
                 { new: true }
@@ -87,6 +86,26 @@ class Reports {
             };
 
             return response.success(res, result, 'Weekly sales report fetched successfully');
+        } catch (error) {
+            return response.serverError(res, error.message);
+        }
+    }
+
+    async filterOrdersWithStatus(req, res) {
+        try {
+            const traderId = new mongoose.Types.ObjectId(req.user?.id);
+            const { state } = req.body;
+            const validStatuses = ['Pending', 'Shipped', 'Delivered', 'Cancelled'];
+            if (!state || !validStatuses.includes(state)) {
+                return response.badRequest(res, 'Invalid or missing status');
+            }
+            const ordersList = await orders
+                .find({ traderId, status: state })
+                .select('-__v')      
+                .lean()
+                .populate('userId');              
+
+            return response.success(res, ordersList, 'Filtered orders fetched successfully');
         } catch (error) {
             return response.serverError(res, error.message);
         }

@@ -7,6 +7,7 @@ const Product = require("../domain/models/products");
 const orders = require('../domain/models/orders');
 const {promise} = require("bcrypt/promises");
 const favouriteModel = require('../domain/models/favourites');
+const mongoose = require('mongoose')
 class UserService {
     async signup(req, res) {
         try {
@@ -113,8 +114,27 @@ class UserService {
     async listFavorites(req, res) {
         const userId = req.user.id;
         try {
-            const favorites = await favouriteModel.find({ userId }).populate('productId');
-            return response.success(res, favorites.map(f => f.productId), 'Favorite products');
+            const favorites = await favouriteModel.aggregate([
+                {
+                    $match: { userId: new mongoose.Types.ObjectId(userId) }
+                },
+                {
+                    $lookup: {
+                        from: 'products',            
+                        localField: 'productId',
+                        foreignField: '_id',
+                        as: 'product'
+                    }
+                },
+                {
+                    $unwind: '$product' 
+                },
+                {
+                    $replaceRoot: { newRoot: '$product' }
+                }
+            ]);
+
+            return response.success(res, favorites, 'Favorite products');
         } catch (error) {
             return response.serverError(res, error.message);
         }
@@ -128,7 +148,7 @@ class UserService {
             if (!productId || !userId) {
                 return response.badRequest(res, 'All fields are required');
             }
-            const productExists = await Product.findOne({ productId: productId, userId: userId});
+            const productExists = await Product.findOne({ _id: productId });
             if (!productExists) {
                 return response.notFound(res, 'Product not found');
             }
@@ -160,7 +180,7 @@ class UserService {
             return response.success(res, {
                 cart: products,
                 orders: userOrders,
-                cartLength: products.length()
+                cartLength: products.length
             }, 'Fetched shopping cart and orders successfully');
         } catch (error) {
             return response.serverError(res, error.message);
