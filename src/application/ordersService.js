@@ -1,5 +1,6 @@
 const Orders = require('../domain/models/orders');
 const productsModel = require('../domain/models/products');
+const listShopping = require('../domain/models/cardShoppings');
 const response = require('../shared/sharedResponse');
 
 class OrderService {
@@ -20,8 +21,13 @@ class OrderService {
             const orderData = { ...req.body, userId, traderId };
             const newOrder = new Orders(orderData);
             await newOrder.save();
-
-            return response.success(res, newOrder, 'Order created', 201);
+            response.success(res, newOrder, 'Order created', 201);
+            const cartItem = await listShopping.findOneAndDelete({ userId, productId });
+            if(cartItem){
+                console.log("Item Deleted Successfully From Cart Shopping");
+            }else{
+                console.log("Error While Deleting The Item From List Shopping");
+            }
         } catch (error) {
             return response.serverError(res, error.message);
         }  
